@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 import com.robotemi.sdk.Robot;
+import com.robotemi.sdk.listeners.OnGoToLocationStatusChangedListener;
 import com.robotemi.sdk.listeners.OnRobotReadyListener;
 
 import org.json.JSONException;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -233,22 +235,32 @@ public class MainActivity extends AppCompatActivity implements OnRobotReadyListe
         Log.d(TAG, "moveAndClickPicture: temporarily saved the current location");
 
         // setup a location change listener to obtain events when temi is moving
-        robot.addOnGoToLocationStatusChangedListener((currentLoc, status, descriptionId, description) -> {
-            Log.d(TAG, String.format("onGoToLocationStatusChanged: location: %s, status: %s, desc: %s", currentLoc, status, description));
+        OnGoToLocationStatusChangedListener listener = new OnGoToLocationStatusChangedListener() {
+            @Override
+            public void onGoToLocationStatusChanged(@NonNull String currentLoc,
+                                                    @NonNull String status,
+                                                    int descriptionId,
+                                                    @NonNull String description) {
+                Log.d(TAG, String.format("onGoToLocationStatusChanged: location: %s, status: %s, desc: %s", currentLoc, status, description));
 
-            // if we've reached, adjust head angle and click picture
-            if (currentLoc.equals(location) && status.equals("complete")) {
-                Log.d(TAG, "reached destination. now adjusting head angle.");
-                robot.tiltAngle(headAngle);
-                Log.d(TAG, "now clicking picture.");
-                clickPicture(cameraId); // the camera service sends a broadcast once done
-            } else if(currentLoc.equals(initialLocationName) && status.equals("complete")) {
-                // when we've reached back to original position, remove the temporarily saved initial location
-                Log.d(TAG, "reached original position");
-                robot.deleteLocation(initialLocationName);
-                Log.d(TAG, "deleted temporary location");
+                // if we've reached, adjust head angle and click picture
+                if (currentLoc.equals(location) && status.equals("complete")) {
+                    Log.d(TAG, "reached destination. now adjusting head angle.");
+                    robot.tiltAngle(headAngle);
+                    Log.d(TAG, "now clicking picture.");
+                    clickPicture(cameraId); // the camera service sends a broadcast once done
+                } else if(currentLoc.equals(initialLocationName) && status.equals("complete")) {
+                    // when we've reached back to original position, remove the temporarily saved initial location
+                    Log.d(TAG, "reached original position");
+                    robot.deleteLocation(initialLocationName);
+                    Log.d(TAG, "deleted temporary location");
+                    // remove the listening to location changes
+                    robot.removeOnGoToLocationStatusChangedListener(this);
+                }
             }
-        });
+        };
+
+        robot.addOnGoToLocationStatusChangedListener(listener);
         // ask temi to go to the requested location
         robot.goTo(location);
     }

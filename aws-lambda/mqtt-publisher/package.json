@@ -1,0 +1,14 @@
+{
+  "name": "mqtt-publisher",
+  "version": "1.0.0",
+  "description": "lambda to receive messages from an API gateway and publish a request on mqtt",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nabeel Nasir",
+  "license": "ISC",
+  "dependencies": {
+    "async-mqtt": "^2.6.1"
+  }
+}

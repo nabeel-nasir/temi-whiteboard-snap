@@ -32,6 +32,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         // load key/value pairs from the apikey.properties file
+        buildConfigField("String", "HIVEMQ_BROKER", apikeyProperties['HIVEMQ_BROKER'])
         buildConfigField("String", "HIVEMQ_USER", apikeyProperties['HIVEMQ_USER'])
         buildConfigField("String", "HIVEMQ_PASSWORD", apikeyProperties['HIVEMQ_PASSWORD'])
         buildConfigField("String", "SLACK_USER_TOKEN", apikeyProperties['SLACK_USER_TOKEN'])

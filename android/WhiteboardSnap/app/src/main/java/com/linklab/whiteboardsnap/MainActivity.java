@@ -308,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements OnRobotReadyListe
 
     @SuppressLint("NewApi")
     private void waitForMqttMessages() {
-        final String host = "c51239432e1144d5864bbfca54347978.s1.eu.hivemq.cloud";
+        final String host = BuildConfig.HIVEMQ_BROKER;
         final String username = BuildConfig.HIVEMQ_USER;
         final String password = BuildConfig.HIVEMQ_PASSWORD;
 

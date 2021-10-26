@@ -31,6 +31,7 @@ Send a request on Slack to the [Temi robot](https://www.robotemi.com/) to naviag
 ```
 2. Add apikey.properties for Android in `android/WhiteboardSnap`. Here's a sample:
 ```
+HIVEMQ_BROKER="xxx.hivemq.cloud"
 HIVEMQ_USER="..."
 HIVEMQ_PASSWORD="..."
 SLACK_USER_TOKEN="..."

@@ -15,7 +15,7 @@ exports.handler = async (event) => {
     };
 
     const options = {
-        host: 'c51239432e1144d5864bbfca54347978.s1.eu.hivemq.cloud',
+        host: apiKey['hivemq_broker_url'],
         port: 8883,
         protocol: 'mqtts',
         username: apiKey['hivemq_user'],
